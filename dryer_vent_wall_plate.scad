@@ -6,11 +6,11 @@ module Wallplate(diameter, depth, thickness=3) {
 
     difference() {
         union() {
-            translate([0, 0, 1]) cube([diameter, diameter, 2], center=true);
-            cylinder(depth, outer_radius, outer_radius, $fn=1000);
+            cube([diameter, diameter, 2], center=true);
+            cylinder(depth * 2, outer_radius, outer_radius, $fn=1000, center=true);
         };
 
-        translate([0, 0, -1]) cylinder(depth + 2, inner_radius, inner_radius, $fn=1000);
+        cylinder(depth * 2 + 2, inner_radius, inner_radius, $fn=1000, center=true);
     };
     // difference(){
     //     cylinder(depth + 1, inner_radius, inner_radius, $fn=1000);
