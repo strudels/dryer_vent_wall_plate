@@ -1,0 +1,3 @@
+[submodule "openscad-fillets"]
+	path = openscad-fillets
+	url = https://github.com/ademuri/openscad-fillets.git
