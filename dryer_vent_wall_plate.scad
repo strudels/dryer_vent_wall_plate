@@ -15,7 +15,8 @@ module Wallplate(
     cylinder_diameter,
     depth,
     cylinder_thickness=3,
-    plate_thickness=2
+    plate_depth=6,
+    plate_thickness=4,
 ) {
     outer_radius = cylinder_diameter / 2;
     inner_radius = outer_radius - cylinder_thickness;
@@ -27,30 +28,34 @@ module Wallplate(
             // uses minkowski for rounded corners
             // uses topFillet for rounded edges (aka fillets...)
             difference() {
+                // Outer plate shape
                 minkowski() {
-                    cube_length = plate_length-plate_length/10;
+                    cylinder_radius = plate_length/10;
+                    cube_length = plate_length-cylinder_radius;
 
                     topFillet(
-                        t=plate_thickness/2,
-                        r=plate_thickness,
-                        s=plate_thickness/LAYER_HEIGHT,
+                        t=plate_depth/2,
+                        r=plate_depth,
+                        s=plate_depth/LAYER_HEIGHT,
                         e=1
-                    ) cube ([cube_length, cube_length, plate_thickness], center=true);
-                    cylinder(r=plate_length/10, $fn=100);
+                    ) cube ([cube_length, cube_length, plate_depth], center=true);
+                    cylinder(r=cylinder_radius, $fn=100);
                 };
 
-                translate([0, 0, -1]) minkowski() {
-                    inner_plate_length = plate_length - 1;
-                    inner_plate_thickness = plate_thickness - 1;
+                // Inner plate shape, that is subtracted from outer plate to hollow it
+                inner_plate_length = plate_length - 1;
+                inner_plate_depth = plate_depth - plate_thickness;
+                translate([0, 0, -(plate_depth - inner_plate_depth)]) minkowski() {
+                    cylinder_radius = plate_length/10;
                     cube_length = inner_plate_length-inner_plate_length/10;
 
                     topFillet(
-                        t=inner_plate_thickness/2,
-                        r=inner_plate_thickness,
-                        s=inner_plate_thickness/LAYER_HEIGHT,
+                        t=inner_plate_depth/2,
+                        r=inner_plate_depth,
+                        s=inner_plate_depth/LAYER_HEIGHT,
                         e=1
-                    ) cube ([cube_length, cube_length, inner_plate_thickness], center=true);
-                    cylinder(r=plate_length/10, $fn=100);
+                    ) cube ([cube_length, cube_length, inner_plate_depth], center=true);
+                    cylinder(r=cylinder_radius, $fn=100);
                 };
             }
             cylinder(depth * 2, outer_radius, outer_radius, $fn=1000, center=true);
