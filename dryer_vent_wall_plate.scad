@@ -26,16 +26,32 @@ module Wallplate(
             // plate
             // uses minkowski for rounded corners
             // uses topFillet for rounded edges (aka fillets...)
-            minkowski() {
-                cube_length = plate_length-plate_length/10;
+            difference() {
+                minkowski() {
+                    cube_length = plate_length-plate_length/10;
 
-                topFillet(
-                    t=plate_thickness/2,
-                    r=plate_thickness,
-                    s=plate_thickness/LAYER_HEIGHT,
-                    e=1
-                ) cube ([cube_length, cube_length, plate_thickness], center=true);
-                cylinder(r=plate_length/10, $fn=100);
+                    topFillet(
+                        t=plate_thickness/2,
+                        r=plate_thickness,
+                        s=plate_thickness/LAYER_HEIGHT,
+                        e=1
+                    ) cube ([cube_length, cube_length, plate_thickness], center=true);
+                    cylinder(r=plate_length/10, $fn=100);
+                };
+
+                translate([0, 0, -1]) minkowski() {
+                    inner_plate_length = plate_length - 1;
+                    inner_plate_thickness = plate_thickness - 1;
+                    cube_length = inner_plate_length-inner_plate_length/10;
+
+                    topFillet(
+                        t=inner_plate_thickness/2,
+                        r=inner_plate_thickness,
+                        s=inner_plate_thickness/LAYER_HEIGHT,
+                        e=1
+                    ) cube ([cube_length, cube_length, inner_plate_thickness], center=true);
+                    cylinder(r=plate_length/10, $fn=100);
+                };
             }
             cylinder(depth * 2, outer_radius, outer_radius, $fn=1000, center=true);
         };
