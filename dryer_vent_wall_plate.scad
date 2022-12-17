@@ -15,8 +15,8 @@ module Wallplate(
     cylinder_diameter,
     depth,
     cylinder_thickness=3,
-    plate_depth=6,
-    plate_thickness=4,
+    plate_depth=4,
+    plate_thickness=2,
 ) {
     outer_radius = cylinder_diameter / 2;
     inner_radius = outer_radius - cylinder_thickness;
@@ -58,6 +58,7 @@ module Wallplate(
                     cylinder(r=cylinder_radius, $fn=100);
                 };
             }
+            // Main cylinder insert
             cylinder(depth * 2, outer_radius, outer_radius, $fn=1000, center=true);
         };
 
